@@ -1,0 +1,79 @@
+{
+  "object_arrays": [
+    {
+      "id": 1,
+      "name": "Alice",
+      "age": 30,
+      "active": true
+    },
+    {
+      "id": 2,
+      "name": "Bob",
+      "age": 25,
+      "active": false
+    },
+    {
+      "id": 3,
+      "name": "Charlie",
+      "age": 35,
+      "active": true
+    },
+    {
+      "id": 3,
+      "name": "Charlie",
+      "age": 35,
+      "active": true
+    }
+  ],
+  "string_arrays": [
+    "apple",
+    "banana",
+    "cherry",
+    "date",
+    "elderberry"
+  ],
+  "numeric_values": {
+    "integer": 42,
+    "float": 3.14159,
+    "negative": -10,
+    "exponential": 1500000.0,
+    "zero": 0
+  },
+  "null_values": {
+    "field_with_null": null,
+    "optional_value": null,
+    "empty_object": null,
+    "unassigned": null
+  },
+  "multiline_strings": [
+    "This is a multiline string.\nIt contains multiple lines.\nEach line is separated by newline characters.\nThis is the fourth line.",
+    "Line 1: Hello world\nLine 2: This is a sample\nLine 3: With three lines total",
+    "First line of text\nSecond line with indentation\n  Third line indented\n    Fourth line with deeper indentation\nBack to normal on fifth"
+  ],
+  "mixed_array": [
+    1,
+    "two",
+    3.0,
+    null,
+    {
+      "key": "value"
+    },
+    [
+      1,
+      2,
+      3
+    ],
+    "string with\nnewline character"
+  ],
+  "additional_examples": {
+    "multiline_object": {
+      "description": "This object contains\na multiline string\ninside a property",
+      "notes": "Line 1\nLine 2\nLine 3\nLine 4\nLine 5"
+    },
+    "array_with_multiline": [
+      "Single line",
+      "Line one\nLine two\nLine three",
+      "Another multiline\nwith\t\ttabs\nand spaces"
+    ]
+  }
+}

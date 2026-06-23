@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<style-scheme id="json-editor-light" _name="JSON Editor Light" version="1.0">
+  <author>JSON Editor</author>
+  <_description>Light color scheme for JSON Editor with gray background</_description>
+
+  <!-- Base colors -->
+  <color name="bg-light" value="#f5f5f5"/>
+  <color name="bg-gutter" value="#e0e0e0"/>
+  <color name="fg-dark" value="#2e3436"/>
+  <color name="fg-gutter" value="#555753"/>
+  <color name="selection-bg" value="#c4d7eb"/>
+  <color name="selection-fg" value="#2e3436"/>
+
+  <!-- Syntax colors for JSON -->
+  <color name="json-key" value="#204a87"/>
+  <color name="json-string" value="#4e9a06"/>
+  <color name="json-number" value="#ce5c00"/>
+  <color name="json-boolean" value="#8f5902"/>
+  <color name="json-null" value="#8f5902"/>
+  <color name="json-bracket" value="#2e3436"/>
+
+  <!-- Global settings -->
+  <style name="text" foreground="fg-dark" background="bg-light"/>
+  <style name="selection" foreground="selection-fg" background="selection-bg"/>
+  <style name="cursor" foreground="fg-dark"/>
+  <style name="current-line" background="#ebebeb"/>
+  <style name="line-numbers" foreground="fg-gutter" background="bg-gutter"/>
+  <style name="background-pattern" background="#ebebeb"/>
+
+  <!-- JSON syntax highlighting -->
+  <style name="json:key" foreground="json-key" bold="true"/>
+  <style name="json:string" foreground="json-string"/>
+  <style name="json:number" foreground="json-number"/>
+  <style name="json:boolean" foreground="json-boolean" bold="true"/>
+  <style name="json:null" foreground="json-null" bold="true"/>
+  <style name="json:bracket" foreground="json-bracket" bold="true"/>
+
+  <!-- Common styles -->
+  <style name="def:string" foreground="json-string"/>
+  <style name="def:number" foreground="json-number"/>
+  <style name="def:boolean" foreground="json-boolean" bold="true"/>
+  <style name="def:constant" foreground="json-null" bold="true"/>
+  <style name="def:special-char" foreground="json-bracket"/>
+</style-scheme>

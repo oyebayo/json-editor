@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=JSON Editor
+Comment=Edit and validate JSON files
+GenericName=JSON Editor
+Exec=json-editor %F
+Icon=json-editor
+Terminal=false
+Categories=Utility;TextEditor;Development;
+MimeType=application/json;
+Keywords=json;edit;validate;formatter;
+StartupNotify=true
+StartupWMClass=com.fdcs.jsoneditor
