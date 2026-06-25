@@ -78,14 +78,13 @@ class PrettyView(Gtk.ScrolledWindow):
     def _apply_custom_styles(self):
         """Apply custom color scheme based on system theme."""
         style_manager = Adw.StyleManager.get_default()
-        self._update_style_scheme(style_manager.get_color_scheme())
+        self._update_style_scheme(style_manager)
 
-    def _get_scheme_name(self, color_scheme):
-        """Pick light or dark scheme based on Adw.ColorScheme flags."""
-        prefer_dark = color_scheme & (Adw.ColorScheme.PREFER_DARK or 0x1)
-        return "json-editor-dark" if prefer_dark else "json-editor-light"
+    def _get_scheme_name(self, style_manager):
+        """Pick light or dark scheme based on actual dark mode state."""
+        return "json-editor-dark" if style_manager.get_dark() else "json-editor-light"
 
-    def _update_style_scheme(self, color_scheme=None):
+    def _update_style_scheme(self, style_manager):
         """Resolve and apply the best available scheme."""
         style_scheme_manager = GtkSource.StyleSchemeManager.new()
         current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -93,7 +92,7 @@ class PrettyView(Gtk.ScrolledWindow):
         if os.path.exists(styles_dir):
             style_scheme_manager.prepend_search_path(styles_dir)
 
-        preferred = self._get_scheme_name(color_scheme) if color_scheme is not None else "json-editor-light"
+        preferred = self._get_scheme_name(style_manager)
         scheme = style_scheme_manager.get_scheme(preferred)
         if not scheme:
             fallback = "json-editor-dark" if preferred == "json-editor-light" else "json-editor-light"
@@ -112,7 +111,7 @@ class PrettyView(Gtk.ScrolledWindow):
     def _on_theme_changed(self, _manager, _pspec):
         """Re-apply editor colors when system light/dark mode changes."""
         style_manager = Adw.StyleManager.get_default()
-        self._update_style_scheme(style_manager.get_color_scheme())
+        self._update_style_scheme(style_manager)
 
     def load_json(self, data, pretty=True):
         """Load JSON data into the view.
