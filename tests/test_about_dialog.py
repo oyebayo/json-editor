@@ -1,6 +1,4 @@
-"""Unit tests for the About dialog."""
-
-import unittest
+"""Tests for the About dialog."""
 
 import gi
 
@@ -11,29 +9,29 @@ from gi.repository import Gio, Gtk  # noqa: E402
 from editor.ui.dialogs import _get_app_version, show_about_dialog  # noqa: E402
 
 
-class TestGetAppVersion(unittest.TestCase):
+class TestGetAppVersion:
     """Tests for the _get_app_version helper."""
 
     def test_returns_string(self):
         result = _get_app_version()
-        self.assertIsInstance(result, str)
+        assert isinstance(result, str)
 
     def test_non_empty(self):
         result = _get_app_version()
-        self.assertTrue(len(result) > 0)
+        assert len(result) > 0
 
 
-class TestAboutDialog(unittest.TestCase):
+class TestAboutDialog:
     """Tests for the About dialog."""
 
-    def setUp(self):
+    def setup_method(self):
         self.app = Gtk.Application(
             application_id="com.test.about",
             flags=Gio.ApplicationFlags.FLAGS_NONE,
         )
         self.win = Gtk.ApplicationWindow(application=self.app)
 
-    def tearDown(self):
+    def teardown_method(self):
         self.win.destroy()
 
     def test_show_about_dialog_creates_dialog(self):
@@ -48,9 +46,9 @@ class TestAboutDialog(unittest.TestCase):
         self.app.add_action(about_action)
 
         action = self.app.lookup_action("about")
-        self.assertIsNotNone(action)
+        assert action is not None
         action.activate(None)
-        self.assertEqual(len(activated), 1)
+        assert len(activated) == 1
 
     def test_about_dialog_comments_match_readme(self):
         """The About dialog comments should use the README's first paragraph."""
@@ -60,5 +58,5 @@ class TestAboutDialog(unittest.TestCase):
             "tree-view editor for making JSON-valid modifications."
         )
         dialog = Gtk.AboutDialog(comments=expected)
-        self.assertEqual(dialog.get_comments(), expected)
+        assert dialog.get_comments() == expected
         dialog.destroy()

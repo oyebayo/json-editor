@@ -21,6 +21,11 @@ endif
 ICON_INSTALL_DIR := $(SHARE)/icons/hicolor/scalable/apps
 DESKTOP_INSTALL_DIR := $(SHARE)/applications
 
+# Virtual environment
+VENV := .venv
+VENV_PYTHON := $(VENV)/bin/python3
+VENV_PYTEST := $(VENV)/bin/pytest
+
 # Source paths
 SRC_DIR := src
 ICON_SRC := assets/$(APP_NAME).svg
@@ -157,16 +162,14 @@ dev: check-python
 	@echo "✓ Development installation complete"
 	@echo "Changes to source code will be reflected immediately"
 
-test: check-python
+test: check-python $(VENV_PYTEST)
 	@echo "Running tests..."
-	@if [ -d tests ]; then \
-	    PYTHONPATH=$(SRC_DIR) $(PYTHON) -m pytest tests/ || \
-	    PYTHONPATH=$(SRC_DIR) $(PYTHON) -m unittest discover tests/ || \
-	    (echo "No test framework found, running basic import test..." && \
-	    PYTHONPATH=$(SRC_DIR) $(PYTHON) -c "import $(PKG_NAME); print('✓ Import successful')"); \
-	else \
-	    echo "No tests directory found"; \
-	fi
+	@PYTHONPATH=$(SRC_DIR) $(VENV_PYTEST) tests/ -v
+
+$(VENV_PYTEST):
+	@echo "Creating virtual environment and installing dependencies..."
+	@$(PYTHON) -m venv $(VENV) --system-site-packages
+	@$(VENV_PYTHON) -m pip install -r requirements.txt
 
 # Clean build artifacts
 clean:
@@ -180,6 +183,7 @@ clean:
 	@rm -rf .pytest_cache/
 	@rm -rf .coverage
 	@rm -rf htmlcov/
+	@rm -rf $(VENV)
 	@find . -type f -name "*.pyc" -delete
 	@find . -type d -name "__pycache__" -delete 2>/dev/null || true
 	@echo "✓ Clean complete"
