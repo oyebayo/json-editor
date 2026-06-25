@@ -4,7 +4,8 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Gio", "2.0")
-from gi.repository import Gio, GLib, Gtk  # noqa: E402
+gi.require_version("Adw", "1")
+from gi.repository import Adw, Gio, GLib, Gtk  # noqa: E402
 
 from editor.json.loader import (  # noqa: E402
     JsonLoadError,
@@ -30,7 +31,7 @@ from editor.ui.status_bar import StatusBar  # noqa: E402
 from editor.ui.tree_view import JsonTreePanel  # noqa: E402
 
 
-class AppWindow(Gtk.ApplicationWindow):
+class AppWindow(Adw.Window):
     def __init__(self, app):
         super().__init__(application=app, title="JSON Editor")
         self.set_default_size(900, 600)
@@ -45,7 +46,6 @@ class AppWindow(Gtk.ApplicationWindow):
 
     def _build_ui(self):
         self.header_bar = HeaderBar()
-        self.set_titlebar(self.header_bar)
 
         self.stack = Gtk.Stack()
         self.stack.set_transition_type(Gtk.StackTransitionType.NONE)
@@ -62,11 +62,15 @@ class AppWindow(Gtk.ApplicationWindow):
 
         self.status_bar = StatusBar()
 
-        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.stack.set_vexpand(True)
-        main_box.append(self.stack)
-        main_box.append(self.status_bar)
-        self.set_child(main_box)
+        content_box.append(self.stack)
+        content_box.append(self.status_bar)
+
+        toolbar_view = Adw.ToolbarView()
+        toolbar_view.add_top_bar(self.header_bar)
+        toolbar_view.set_content(content_box)
+        self.set_content(toolbar_view)
 
     def _create_actions(self, app):
         open_action = Gio.SimpleAction.new("open", None)

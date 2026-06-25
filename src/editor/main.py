@@ -5,10 +5,18 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Gio", "2.0")
-from gi.repository import Gtk  # noqa: E402
+gi.require_version("Adw", "1")
+from gi.repository import Adw, Gio  # noqa: E402
+
+Adw.init()
 
 from editor.logger import get_logger, setup_logging  # noqa: E402
 from editor.ui.window import AppWindow  # noqa: E402
+
+
+def on_startup(app):
+    logger = get_logger(__name__)
+    logger.info("Application startup")
 
 
 def on_activate(app):
@@ -50,7 +58,8 @@ def main():
             logger.error(f"File not readable: {initial_file}")
             # App will still launch, but error will be shown after window is created
 
-    app = Gtk.Application(application_id="com.fdcs.jsoneditor")
+    app = Adw.Application(application_id="com.fdcs.jsoneditor")
+    app.connect("startup", on_startup)
     app.connect("activate", on_activate)
 
     # Store initial file for use in on_activate

@@ -5,13 +5,19 @@ A GTK4 desktop application for GNOME that reads JSON files, displays them in a p
 
 ## 1. Platform & Technology
 - Target Platform: GNOME desktop (Linux)
-- UI Toolkit: GTK4
+- UI Toolkit: GTK4 with libadwaita
 - Language: Python with PyGObject for GTK4 native integration
 
 ---
 
 ## 2. User Interface
-Application used modern GTK4 concepts, no legacy GTK3 implementation methods
+Application uses modern GTK4 concepts with libadwaita for Adwaita styling and system theme integration. No legacy GTK3 implementation methods.
+
+### 2.0 Theme Support
+- Uses libadwaita (`Adw.Application`, `Adw.Window`, `Adw.ToolbarView`) for native Adwaita window decorations and styling
+- Follows system color scheme (light/dark mode) via `Adw.StyleManager`
+- GtkSourceView editor theme switches dynamically between light and dark variants based on system preference
+- Theme changes apply immediately when system toggles between light/dark mode
 
 ### 2.1 Application Header
 - Header is made up of three sections
@@ -65,9 +71,10 @@ Two alternating view modes
 #### 2.3.1 Pretty View (Read-Only)
 - Default view when a file is opened
 - Standard pretty-printed JSON output (indented, syntax-highlighted, line numbers in gutter)
-    - probably use GtkSourceView control
-    - light gray background
-    - gutter colour is darker gray than text area colour
+    - uses GtkSourceView control
+    - light theme: light gray background, darker gray gutter
+    - dark theme: dark background with matching syntax colors
+    - theme switches automatically with system color scheme
 - No editing capability in this mode
 - No expand/collapse function on the JSON nodes
 - Flat display of the entire JSON structure

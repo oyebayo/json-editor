@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<style-scheme id="json-editor-dark" _name="JSON Editor Dark" version="1.0">
+  <author>JSON Editor</author>
+  <_description>Dark color scheme for JSON Editor</_description>
+
+  <!-- Base colors -->
+  <color name="bg-dark" value="#1e1e1e"/>
+  <color name="bg-gutter" value="#2d2d2d"/>
+  <color name="fg-light" value="#d4d4d4"/>
+  <color name="fg-gutter" value="#858585"/>
+  <color name="selection-bg" value="#264f78"/>
+  <color name="selection-fg" value="#d4d4d4"/>
+
+  <!-- Syntax colors for JSON -->
+  <color name="json-key" value="#9cdcfe"/>
+  <color name="json-string" value="#ce9178"/>
+  <color name="json-number" value="#b5cea8"/>
+  <color name="json-boolean" value="#569cd6"/>
+  <color name="json-null" value="#569cd6"/>
+  <color name="json-bracket" value="#d4d4d4"/>
+
+  <!-- Global settings -->
+  <style name="text" foreground="fg-light" background="bg-dark"/>
+  <style name="selection" foreground="selection-fg" background="selection-bg"/>
+  <style name="cursor" foreground="fg-light"/>
+  <style name="current-line" background="#2f2f2f"/>
+  <style name="line-numbers" foreground="fg-gutter" background="bg-gutter"/>
+  <style name="background-pattern" background="#262626"/>
+
+  <!-- JSON syntax highlighting -->
+  <style name="json:key" foreground="json-key" bold="true"/>
+  <style name="json:string" foreground="json-string"/>
+  <style name="json:number" foreground="json-number"/>
+  <style name="json:boolean" foreground="json-boolean" bold="true"/>
+  <style name="json:null" foreground="json-null" bold="true"/>
+  <style name="json:bracket" foreground="json-bracket" bold="true"/>
+
+  <!-- Common styles -->
+  <style name="def:string" foreground="json-string"/>
+  <style name="def:number" foreground="json-number"/>
+  <style name="def:boolean" foreground="json-boolean" bold="true"/>
+  <style name="def:constant" foreground="json-null" bold="true"/>
+  <style name="def:special-char" foreground="json-bracket"/>
+</style-scheme>

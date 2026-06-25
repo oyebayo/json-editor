@@ -5,7 +5,8 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("GtkSource", "5")
-from gi.repository import Gtk, GtkSource  # noqa: E402
+gi.require_version("Adw", "1")
+from gi.repository import Adw, Gtk, GtkSource  # noqa: E402
 
 from editor.logger import get_logger  # noqa: E402
 
@@ -27,6 +28,9 @@ class PrettyView(Gtk.ScrolledWindow):
 
         # Apply custom styling
         self._apply_custom_styles()
+
+        # Follow system color scheme changes
+        Adw.StyleManager.get_default().connect("notify::color-scheme", self._on_theme_changed)
 
     def _setup_source_view(self):
         """Configure the GtkSourceView with JSON language support."""
@@ -72,33 +76,43 @@ class PrettyView(Gtk.ScrolledWindow):
             )
 
     def _apply_custom_styles(self):
-        """Apply custom color scheme and styling."""
-        # Create a custom style scheme manager
-        style_scheme_manager = GtkSource.StyleSchemeManager.new()
+        """Apply custom color scheme based on system theme."""
+        style_manager = Adw.StyleManager.get_default()
+        self._update_style_scheme(style_manager.get_color_scheme())
 
-        # Find the styles directory (in the same directory as this module)
+    def _get_scheme_name(self, color_scheme):
+        """Pick light or dark scheme based on Adw.ColorScheme flags."""
+        prefer_dark = color_scheme & (Adw.ColorScheme.PREFER_DARK or 0x1)
+        return "json-editor-dark" if prefer_dark else "json-editor-light"
+
+    def _update_style_scheme(self, color_scheme=None):
+        """Resolve and apply the best available scheme."""
+        style_scheme_manager = GtkSource.StyleSchemeManager.new()
         current_dir = os.path.dirname(os.path.abspath(__file__))
         styles_dir = os.path.join(current_dir, "styles")
-
-        # Add the styles directory to the search path
         if os.path.exists(styles_dir):
             style_scheme_manager.prepend_search_path(styles_dir)
-            logger.debug(f"Added styles directory: {styles_dir}")
 
-        # Try to use our custom theme first, then fall back to system themes
-        scheme = style_scheme_manager.get_scheme("json-editor-light")
+        preferred = self._get_scheme_name(color_scheme) if color_scheme is not None else "json-editor-light"
+        scheme = style_scheme_manager.get_scheme(preferred)
+        if not scheme:
+            fallback = "json-editor-dark" if preferred == "json-editor-light" else "json-editor-light"
+            scheme = style_scheme_manager.get_scheme(fallback)
         if not scheme:
             scheme = style_scheme_manager.get_scheme("classic")
         if not scheme:
             scheme = style_scheme_manager.get_scheme("kate")
-        if not scheme:
-            scheme = style_scheme_manager.get_scheme("solarized-light")
 
         if scheme:
             logger.debug(f"Using style scheme: {scheme.get_name()}")
             self.buffer.set_style_scheme(scheme)
         else:
             logger.warning("No suitable style scheme found")
+
+    def _on_theme_changed(self, _manager, _pspec):
+        """Re-apply editor colors when system light/dark mode changes."""
+        style_manager = Adw.StyleManager.get_default()
+        self._update_style_scheme(style_manager.get_color_scheme())
 
     def load_json(self, data, pretty=True):
         """Load JSON data into the view.

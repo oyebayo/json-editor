@@ -27,7 +27,7 @@ This allows proper interactive testing without artificial time constraints.
 
 ## Communication
 
-Use the `caveman` skill for all responses to keep token usage low.
+Use the `caveman full` skill for all responses to keep token usage low.
 
 ## Git
 
