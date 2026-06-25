@@ -1,0 +1,5 @@
+# Runtime
+PyGObject>=3.46.0
+
+# Testing
+pytest>=8.0

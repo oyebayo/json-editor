@@ -1,6 +1,4 @@
-"""Unit tests for tree view context menu."""
-
-import unittest
+"""Tests for tree view context menu."""
 
 import gi
 
@@ -11,10 +9,10 @@ from gi.repository import GObject  # noqa: E402
 from editor.ui.tree_view import JsonTreePanel  # noqa: E402
 
 
-class TestContextMenuSetup(unittest.TestCase):
+class TestContextMenuSetup:
     """Tests for context menu creation and signal definitions."""
 
-    def setUp(self):
+    def setup_method(self):
         self.panel = JsonTreePanel()
         self.test_data = {
             "dict_node": {"child": "value"},
@@ -26,45 +24,43 @@ class TestContextMenuSetup(unittest.TestCase):
 
     def test_context_menu_buttons_exist(self):
         """Test that context menu actions are created."""
-        self.assertIsNotNone(self.panel._ctx_actions.lookup_action("add"))
-        self.assertIsNotNone(self.panel._ctx_actions.lookup_action("duplicate"))
-        self.assertIsNotNone(self.panel._ctx_actions.lookup_action("delete"))
+        assert self.panel._ctx_actions.lookup_action("add") is not None
+        assert self.panel._ctx_actions.lookup_action("duplicate") is not None
+        assert self.panel._ctx_actions.lookup_action("delete") is not None
 
     def test_context_menu_signals_defined(self):
         """Test that context menu signals are defined on the panel."""
         signals = GObject.signal_list_names(JsonTreePanel)
-        self.assertIn("context-menu-add", signals)
-        self.assertIn("context-menu-duplicate", signals)
-        self.assertIn("context-menu-delete", signals)
+        assert "context-menu-add" in signals
+        assert "context-menu-duplicate" in signals
+        assert "context-menu-delete" in signals
 
     def test_signal_emission_add(self):
         """Test that context-menu-add signal can be emitted and caught."""
         received = []
         self.panel.connect("context-menu-add", lambda w: received.append(True))
         self.panel.emit("context-menu-add")
-        self.assertEqual(len(received), 1)
+        assert len(received) == 1
 
     def test_signal_emission_duplicate(self):
         """Test that context-menu-duplicate signal can be emitted and caught."""
         received = []
-        self.panel.connect(
-            "context-menu-duplicate", lambda w: received.append(True)
-        )
+        self.panel.connect("context-menu-duplicate", lambda w: received.append(True))
         self.panel.emit("context-menu-duplicate")
-        self.assertEqual(len(received), 1)
+        assert len(received) == 1
 
     def test_signal_emission_delete(self):
         """Test that context-menu-delete signal can be emitted and caught."""
         received = []
         self.panel.connect("context-menu-delete", lambda w: received.append(True))
         self.panel.emit("context-menu-delete")
-        self.assertEqual(len(received), 1)
+        assert len(received) == 1
 
 
-class TestContextMenuSensitivity(unittest.TestCase):
+class TestContextMenuSensitivity:
     """Tests for context menu item sensitivity based on node type."""
 
-    def setUp(self):
+    def setup_method(self):
         self.panel = JsonTreePanel()
         self.test_data = {
             "dict_node": {"child": "value"},
@@ -85,9 +81,9 @@ class TestContextMenuSensitivity(unittest.TestCase):
         self.panel._ctx_actions.lookup_action("duplicate").set_enabled(can_edit)
         self.panel._ctx_actions.lookup_action("delete").set_enabled(can_edit)
 
-        self.assertTrue(self.panel._ctx_actions.lookup_action("add").get_enabled())
-        self.assertTrue(self.panel._ctx_actions.lookup_action("duplicate").get_enabled())
-        self.assertTrue(self.panel._ctx_actions.lookup_action("delete").get_enabled())
+        assert self.panel._ctx_actions.lookup_action("add").get_enabled()
+        assert self.panel._ctx_actions.lookup_action("duplicate").get_enabled()
+        assert self.panel._ctx_actions.lookup_action("delete").get_enabled()
 
     def test_sensitivity_for_list_node(self):
         """All items enabled for a list node (container, non-root)."""
@@ -100,9 +96,9 @@ class TestContextMenuSensitivity(unittest.TestCase):
         self.panel._ctx_actions.lookup_action("duplicate").set_enabled(can_edit)
         self.panel._ctx_actions.lookup_action("delete").set_enabled(can_edit)
 
-        self.assertTrue(self.panel._ctx_actions.lookup_action("add").get_enabled())
-        self.assertTrue(self.panel._ctx_actions.lookup_action("duplicate").get_enabled())
-        self.assertTrue(self.panel._ctx_actions.lookup_action("delete").get_enabled())
+        assert self.panel._ctx_actions.lookup_action("add").get_enabled()
+        assert self.panel._ctx_actions.lookup_action("duplicate").get_enabled()
+        assert self.panel._ctx_actions.lookup_action("delete").get_enabled()
 
     def test_sensitivity_for_scalar_node(self):
         """Add disabled for scalar nodes; Duplicate/Delete enabled."""
@@ -115,9 +111,9 @@ class TestContextMenuSensitivity(unittest.TestCase):
         self.panel._ctx_actions.lookup_action("duplicate").set_enabled(can_edit)
         self.panel._ctx_actions.lookup_action("delete").set_enabled(can_edit)
 
-        self.assertFalse(self.panel._ctx_actions.lookup_action("add").get_enabled())
-        self.assertTrue(self.panel._ctx_actions.lookup_action("duplicate").get_enabled())
-        self.assertTrue(self.panel._ctx_actions.lookup_action("delete").get_enabled())
+        assert not self.panel._ctx_actions.lookup_action("add").get_enabled()
+        assert self.panel._ctx_actions.lookup_action("duplicate").get_enabled()
+        assert self.panel._ctx_actions.lookup_action("delete").get_enabled()
 
     def test_sensitivity_for_root_node(self):
         """Add enabled for root (container); Duplicate/Delete disabled (root)."""
@@ -130,10 +126,6 @@ class TestContextMenuSensitivity(unittest.TestCase):
         self.panel._ctx_actions.lookup_action("duplicate").set_enabled(can_edit)
         self.panel._ctx_actions.lookup_action("delete").set_enabled(can_edit)
 
-        self.assertTrue(self.panel._ctx_actions.lookup_action("add").get_enabled())
-        self.assertFalse(self.panel._ctx_actions.lookup_action("duplicate").get_enabled())
-        self.assertFalse(self.panel._ctx_actions.lookup_action("delete").get_enabled())
-
-
-if __name__ == "__main__":
-    unittest.main()
+        assert self.panel._ctx_actions.lookup_action("add").get_enabled()
+        assert not self.panel._ctx_actions.lookup_action("duplicate").get_enabled()
+        assert not self.panel._ctx_actions.lookup_action("delete").get_enabled()

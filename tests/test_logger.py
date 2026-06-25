@@ -1,14 +1,14 @@
-"""Unit tests for the logger module."""
+"""Tests for the logger module."""
 
 import logging
-import os
 import sys
-import unittest
+
+import pytest
 
 from editor.logger import RelativePathFormatter, get_logger, setup_logging
 
 
-class TestRelativePathFormatter(unittest.TestCase):
+class TestRelativePathFormatter:
     """Tests for RelativePathFormatter."""
 
     def test_strips_path_to_start_from_src(self):
@@ -24,7 +24,7 @@ class TestRelativePathFormatter(unittest.TestCase):
             exc_info=None,
         )
         result = formatter.format(record)
-        self.assertEqual(result, "src/editor/main.py:42")
+        assert result == "src/editor/main.py:42"
 
     def test_handles_path_without_src(self):
         """Test that paths without src/ are not modified."""
@@ -39,7 +39,7 @@ class TestRelativePathFormatter(unittest.TestCase):
             exc_info=None,
         )
         result = formatter.format(record)
-        self.assertEqual(result, "/some/other/path/file.py")
+        assert result == "/some/other/path/file.py"
 
     def test_handles_nested_src_paths(self):
         """Test nested paths under src/."""
@@ -54,13 +54,14 @@ class TestRelativePathFormatter(unittest.TestCase):
             exc_info=None,
         )
         result = formatter.format(record)
-        self.assertEqual(result, "src/editor/ui/header_bar.py")
+        assert result == "src/editor/ui/header_bar.py"
 
 
-class TestSetupLogging(unittest.TestCase):
+class TestSetupLogging:
     """Tests for setup_logging function."""
 
-    def setUp(self):
+    @pytest.fixture(autouse=True)
+    def reset_logging(self):
         """Reset logging before each test."""
         root_logger = logging.getLogger()
         root_logger.handlers.clear()
@@ -70,22 +71,22 @@ class TestSetupLogging(unittest.TestCase):
         """Test that default log level is INFO."""
         setup_logging(debug=False)
         root_logger = logging.getLogger()
-        self.assertEqual(root_logger.level, logging.INFO)
+        assert root_logger.level == logging.INFO
 
     def test_debug_level_when_debug_true(self):
         """Test that log level is DEBUG when debug=True."""
         setup_logging(debug=True)
         root_logger = logging.getLogger()
-        self.assertEqual(root_logger.level, logging.DEBUG)
+        assert root_logger.level == logging.DEBUG
 
     def test_logs_to_stderr(self):
         """Test that logs are written to stderr."""
         setup_logging(debug=False)
         root_logger = logging.getLogger()
-        self.assertEqual(len(root_logger.handlers), 1)
+        assert len(root_logger.handlers) == 1
         handler = root_logger.handlers[0]
-        self.assertIsInstance(handler, logging.StreamHandler)
-        self.assertEqual(handler.stream, sys.stderr)
+        assert isinstance(handler, logging.StreamHandler)
+        assert handler.stream is sys.stderr
 
     def test_log_format_includes_required_fields(self):
         """Test that log format includes timestamp, level, file, line, and function."""
@@ -93,7 +94,6 @@ class TestSetupLogging(unittest.TestCase):
         root_logger = logging.getLogger()
         handler = root_logger.handlers[0]
 
-        # Create a log record and format it
         record = logging.LogRecord(
             name="test",
             level=logging.INFO,
@@ -106,44 +106,41 @@ class TestSetupLogging(unittest.TestCase):
         record.funcName = "test_function"
         formatted = handler.formatter.format(record)
 
-        # Check format includes all required parts
-        self.assertIn("INFO", formatted)
-        self.assertIn("src/editor/main.py", formatted)
-        self.assertIn("42", formatted)
-        self.assertIn("test_function", formatted)
-        self.assertIn("test message", formatted)
+        assert "INFO" in formatted
+        assert "src/editor/main.py" in formatted
+        assert "42" in formatted
+        assert "test_function" in formatted
+        assert "test message" in formatted
         # Check timestamp format (YYYY-MM-DD HH:MM:SS)
-        self.assertIn("[", formatted)
-        self.assertIn("]", formatted)
+        assert "[" in formatted
+        assert "]" in formatted
 
     def test_debug_messages_filtered_when_not_debug(self):
         """Test that DEBUG messages are filtered when debug=False."""
         setup_logging(debug=False)
         logger = get_logger("test")
 
-        # DEBUG should be filtered at INFO level
-        self.assertFalse(logger.isEnabledFor(logging.DEBUG))
-        self.assertTrue(logger.isEnabledFor(logging.INFO))
+        assert not logger.isEnabledFor(logging.DEBUG)
+        assert logger.isEnabledFor(logging.INFO)
 
     def test_debug_messages_enabled_when_debug(self):
         """Test that DEBUG messages are enabled when debug=True."""
         setup_logging(debug=True)
         logger = get_logger("test")
 
-        # DEBUG should be enabled
-        self.assertTrue(logger.isEnabledFor(logging.DEBUG))
-        self.assertTrue(logger.isEnabledFor(logging.INFO))
+        assert logger.isEnabledFor(logging.DEBUG)
+        assert logger.isEnabledFor(logging.INFO)
 
 
-class TestGetLogger(unittest.TestCase):
+class TestGetLogger:
     """Tests for get_logger function."""
 
     def test_returns_logger_instance(self):
         """Test that get_logger returns a Logger instance."""
         logger = get_logger("test")
-        self.assertIsInstance(logger, logging.Logger)
+        assert isinstance(logger, logging.Logger)
 
     def test_returns_logger_with_correct_name(self):
         """Test that get_logger returns a logger with the correct name."""
         logger = get_logger("test.module")
-        self.assertEqual(logger.name, "test.module")
+        assert logger.name == "test.module"
