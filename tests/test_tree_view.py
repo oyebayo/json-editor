@@ -245,6 +245,55 @@ class TestSelectionPersistence:
         assert "child1_copy" in self.panel.json_data["root_key"]
         assert "child1_copy1" in self.panel.json_data["root_key"]
 
+    def test_refresh_tree_resets_selection_to_root(self):
+        """refresh_tree must rebuild the selection model, resetting to root."""
+        self._select_node_by_path("/Root/root_key/child2")
+        assert self._get_selected_path() == "/Root/root_key/child2"
+
+        self.panel.refresh_tree()
+
+        # After refresh, selection defaults to position 0 (root)
+        assert self._get_selected_path() == "/Root"
+
+    def test_select_node_by_path_restores_after_refresh(self):
+        """After refresh, select_node_by_path must restore the original selection."""
+        self._select_node_by_path("/Root/root_key/child2")
+        original_path = self._get_selected_path()
+        assert original_path == "/Root/root_key/child2"
+
+        self.panel.refresh_tree()
+        assert self._get_selected_path() == "/Root"
+
+        self.panel.select_node_by_path(original_path)
+        assert self._get_selected_path() == "/Root/root_key/child2"
+
+    def test_select_node_by_path_restores_after_refresh_array(self):
+        """After refresh, select_node_by_path must restore array element selection."""
+        self._select_node_by_path("/Root/root_key/child3[1]")
+        original_path = self._get_selected_path()
+        assert original_path == "/Root/root_key/child3[1]"
+
+        self.panel.refresh_tree()
+
+        self.panel.select_node_by_path(original_path)
+        assert self._get_selected_path() == "/Root/root_key/child3[1]"
+
+    def test_select_node_by_path_restores_after_key_rename(self):
+        """After a key rename + refresh, the updated path must restore selection."""
+        self._select_node_by_path("/Root/root_key/child1")
+        assert self._get_selected_path() == "/Root/root_key/child1"
+
+        # Simulate inspector renaming a dict key
+        self.panel.json_data["root_key"]["renamed_child"] = (
+            self.panel.json_data["root_key"].pop("child1")
+        )
+        self.panel.refresh_tree()
+
+        # Old path no longer matches; new path must be used
+        assert not self.panel.select_node_by_path("/Root/root_key/child1")
+        assert self.panel.select_node_by_path("/Root/root_key/renamed_child")
+        assert self._get_selected_path() == "/Root/root_key/renamed_child"
+
 
 class TestSelectionState:
     """Tests for get_selection_state method."""

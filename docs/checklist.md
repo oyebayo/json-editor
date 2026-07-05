@@ -187,9 +187,13 @@ Implementation tracking for the GTK4 JSON Editor desktop application.
 
 - [x] After Add or Duplicate: the newly created node is selected and highlighted
 - [x] After Delete: selection moves to the parent node, or if unavailable, to the nearest sibling
+- [x] After Property Inspector Apply Changes: the currently selected node remains selected
+    - [x] If the inspector renamed a dict key, the selection follows the renamed node
+    - [x] The tree view scroll position is preserved so the selected node stays in the same viewport position
 - [x] Selection is tracked via JSON XPath and restored after tree refresh
 - [x] Property inspector updates to reflect the newly selected node after any operation
-- [x] Tree view automatically scrolls to make the selected node visible after any selection change
+- [x] Tree view automatically scrolls to make the selected node visible after Add, Duplicate, or Delete
+- [x] Tree view scroll position is preserved (not reset) after Property Inspector Apply Changes
 
 ### 3.6 Context Menu
 
