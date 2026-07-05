@@ -240,9 +240,13 @@ When the user clicks add node, he is presented with a dialog here he can specify
 ### 3.5 Selection Persistence
   - After Add or Duplicate: the newly created node is selected and highlighted
   - After Delete: selection moves to the parent node, or if that's not available, to the nearest sibling
+  - After Property Inspector Apply Changes: the currently selected node remains selected
+    - If the inspector renamed a dict key, the selection follows the renamed node
+    - The tree view scroll position is preserved so the selected node stays in the same viewport position
   - Selection is tracked via JSON XPath and restored after tree refresh
   - Property inspector updates to reflect the newly selected node after any operation
-  - Tree view automatically scrolls to make the selected node visible after any selection change
+  - Tree view automatically scrolls to make the selected node visible after Add, Duplicate, or Delete
+  - Tree view scroll position is preserved (not reset) after Property Inspector Apply Changes
 
 ### 3.6 Context Menu
 Right-clicking on a node in the tree view opens a context menu with three items: Add Node, Duplicate, and Delete.

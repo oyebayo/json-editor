@@ -42,12 +42,16 @@
 - Locate node by stored path
 - Modify JsonNode (change key, type, value)
 - Full tree rebuild
+- Preserve selected node: capture XPath before rebuild, restore after
+    - If a dict key was renamed, update the path's last segment to the new name
+- Preserve scroll position: save vadjustment before rebuild, restore after layout
 - Clear unsaved indicator
 
 **Delete Node**:
 - Locate node by stored path
 - Remove from parent (object or array)
 - Full tree rebuild
+- Restore selection to parent or nearest sibling
 - Update breadcrumb
 
 **Files**: `side_panel.c/h`, `json_ops.c/h`, `tree_view.c/h`
