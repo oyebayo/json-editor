@@ -218,13 +218,29 @@ class AppWindow(Adw.Window):
             logger.info("Node removed")
 
     def _on_inspector_apply(self, _button):
+        # Capture the selected node's path before refresh destroys the
+        # selection model. If the inspector renamed a dict key, update the
+        # last path segment to the new name so selection can be restored.
+        _, node_path = self.tree_panel.get_selected_node_info()
+        new_name = self.tree_panel.inspector.name_entry.get_text().strip()
+
         success = self.tree_panel.inspector.apply_changes()
         if not success:
             return
+
+        target_path = node_path
+        if new_name and not node_path.endswith("]") and node_path != "/":
+            last_sep = node_path.rfind("/")
+            old_name = node_path[last_sep + 1:]
+            if old_name != new_name:
+                target_path = node_path[:last_sep + 1] + new_name
+
         self.current_data = self.tree_panel.json_data
         self.tree_panel.refresh_tree()
         self.pretty_view.load_json(self.current_data)
         self._connect_tree_selection()
+        self.tree_panel.select_node_by_path(target_path)
+        self._update_edit_buttons()
 
     def _connect_tree_selection(self):
         """Connect the tree selection-changed signal to the handler."""
