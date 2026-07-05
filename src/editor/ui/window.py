@@ -224,6 +224,10 @@ class AppWindow(Adw.Window):
         _, node_path = self.tree_panel.get_selected_node_info()
         new_name = self.tree_panel.inspector.name_entry.get_text().strip()
 
+        # Preserve scroll position across the tree rebuild
+        vadj = self.tree_panel.tree_scrolled.get_vadjustment()
+        scroll_pos = vadj.get_value() if vadj else 0
+
         success = self.tree_panel.inspector.apply_changes()
         if not success:
             return
@@ -239,7 +243,15 @@ class AppWindow(Adw.Window):
         self.tree_panel.refresh_tree()
         self.pretty_view.load_json(self.current_data)
         self._connect_tree_selection()
-        self.tree_panel.select_node_by_path(target_path)
+        self.tree_panel.select_node_by_path(target_path, scroll=False)
+
+        # Restore scroll position after GTK lays out the new model
+        def _restore_scroll():
+            if vadj is not None:
+                vadj.set_value(scroll_pos)
+            return False
+        GLib.idle_add(_restore_scroll)
+
         self._update_edit_buttons()
 
     def _connect_tree_selection(self):

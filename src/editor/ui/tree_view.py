@@ -185,11 +185,11 @@ class JsonTreePanel(Gtk.Box):
         self.column_view.append_column(value_column)
 
         # Tree in scrolled window (left side)
-        tree_scrolled = Gtk.ScrolledWindow()
-        tree_scrolled.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-        tree_scrolled.set_child(self.column_view)
-        tree_scrolled.set_hexpand(True)
-        self.append(tree_scrolled)
+        self.tree_scrolled = Gtk.ScrolledWindow()
+        self.tree_scrolled.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        self.tree_scrolled.set_child(self.column_view)
+        self.tree_scrolled.set_hexpand(True)
+        self.append(self.tree_scrolled)
 
         # Separator
         separator = Gtk.Separator(orientation=Gtk.Orientation.VERTICAL)
@@ -682,11 +682,12 @@ class JsonTreePanel(Gtk.Box):
         """Return True if JSON data is loaded."""
         return self.json_data is not None
 
-    def select_node_by_path(self, target_path: str) -> bool:
+    def select_node_by_path(self, target_path: str, scroll: bool = True) -> bool:
         """Find and select the node matching the given XPath.
 
         Args:
             target_path: XPath string to find (e.g., "/Root/key1/[0]")
+            scroll: If True, scroll the selected item into focus.
 
         Returns:
             True if the node was found and selected.
@@ -709,7 +710,8 @@ class JsonTreePanel(Gtk.Box):
             if row_path == target_path:
                 # Found it! Select this position in the selection model
                 self.selection_model.set_selected(i)
-                self.column_view.scroll_to(i, None, Gtk.ListScrollFlags.FOCUS)
+                if scroll:
+                    self.column_view.scroll_to(i, None, Gtk.ListScrollFlags.FOCUS)
                 return True
 
         return False
