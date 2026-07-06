@@ -39,4 +39,6 @@ Thumbs.db
 example.py
 
 # Qwen auto-generated skills
-.qwen/skills/auto-skill-*/
+.qwen/
+.agents/
+.env
