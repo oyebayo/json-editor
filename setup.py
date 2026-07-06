@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="json-editor",
-    version="1.1.3",
+    version="1.1.4",
     description="A JSON editor",
     author="sinistrian",
     author_email="oyebayo@gmail.com",
