@@ -1,0 +1,47 @@
+name: Publish Arch Package
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  package-arch:
+    runs-on: [alpine]
+    container:
+      image: archlinux:latest
+    env:
+      GIT_SSL_NO_VERIFY: "true"
+    steps:
+      - name: Environment prep
+        run: |
+          pacman -Sy --noconfirm git > /dev/null 2>&1
+          sed -i 's/EUID == 0/EUID == -1/' /usr/bin/makepkg
+
+      - name: Clone repository
+        run: |
+          git clone --quiet ${{ gitea.server_url }}/${{ gitea.repository }}.git .
+          git checkout ${{ gitea.sha }}
+
+      - name: Install build dependencies
+        run: |
+          pacman -Syu --noconfirm --needed --quiet \
+            curl \
+            python \
+            gtk4 \
+            libadwaita \
+            gobject-introspection \
+            python-build \
+            python-installer \
+            python-wheel \
+            fakeroot \
+            debugedit > /dev/null 2>&1
+
+      - name: Publish package
+        run: |
+          makepkg --noconfirm --nocolor
+          PKG=$(ls *.pkg.tar.zst 2>/dev/null | head -1)
+          if [ -z "$PKG" ]; then
+            echo "Error: No package file found"
+            exit 1
+          fi
+          echo "✅ $PKG built"

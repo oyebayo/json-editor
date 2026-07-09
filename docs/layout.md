@@ -3,15 +3,17 @@
 ```text
 ├── Makefile                    # Build, install, test, run targets
 ├── README.md                   # Brief overview and quick-start
-├── setup.py                    # setuptools entry point
-── .gitignore                  # Git ignore rules
+├── pyproject.toml              # Python project configuration
+├── PKGBUILD                    # Arch Linux package build
+├── .gitignore                  # Git ignore rules
+├── .gitea/workflows/           # CI workflows (quality checks, packaging)
 ├── src/
 │   └── editor/                 # Main Python package
 │       ├── json/               # File and URL loading, saving
 │       └── ui/                 # GTK4 widgets (window, tree, inspector, etc.)
 ├── assets/
 │   ├── json-editor.svg         # Application icon
-│   ── json-editor.desktop     # Desktop entry file
+│   └── json-editor.desktop     # Desktop entry file
 ├── tests/                      # Unit tests and fixtures
 ├── docs/
 │   ├── requirements.md         # Full UI and behaviour specification
