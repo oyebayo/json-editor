@@ -38,6 +38,10 @@ This allows proper interactive testing without artificial time constraints.
 
 Use the `caveman full` skill for all responses to keep token usage low.
 
+## Version files
+
+Keep the app version in `pyproject.toml` equal to the one in `PKGBUILD`
+
 ## Git
 
 **NEVER force push.** Do not use `git push --force` or `git push -f` under any circumstances. Always use regular `git push`.
