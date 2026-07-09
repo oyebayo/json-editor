@@ -4,12 +4,12 @@ pkgver=1.1.5
 pkgrel=1
 pkgdesc="A JSON editor"
 arch=('any')
-url="https://r.fdcs.lan/sinistrian/json-editor"
+url="https://github.com/oyebayo/json-editor"
 license=("MIT")
 depends=("python" "gtk4" "libadwaita")
 makedepends=("python" "python-build" "python-installer" "python-setuptools" "python-wheel" "git")
 
-source=("git+https://r.fdcs.lan/sinistrian/json-editor.git")
+source=("git+https://github.com/oyebayo/json-editor.git")
 sha256sums=("SKIP")
 
 pkgver() {

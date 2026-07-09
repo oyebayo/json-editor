@@ -6,7 +6,7 @@
 ├── pyproject.toml              # Python project configuration
 ├── PKGBUILD                    # Arch Linux package build
 ├── .gitignore                  # Git ignore rules
-├── .gitea/workflows/           # CI workflows (quality checks, packaging)
+├── .github/workflows/          # CI workflows (quality checks, packaging)
 ├── src/
 │   └── editor/                 # Main Python package
 │       ├── json/               # File and URL loading, saving

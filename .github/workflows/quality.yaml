@@ -1,0 +1,31 @@
+name: Quality Checks
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            python3 \
+            python3-pip \
+            python3-venv \
+            python3-gi \
+            python3-cairo \
+            libgtk-4-dev \
+            libadwaita-1-dev \
+            xvfb
+
+      - name: Build
+        run: make build
+
+      - name: Test
+        run: xvfb-run make test
