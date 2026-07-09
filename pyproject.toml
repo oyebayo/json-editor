@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "json-editor"
+version = "1.1.4"
+description = "A JSON editor"
+authors = [
+ {name = "sinistrian", email = "oyebayo@gmail.com"}
+]
+requires-python = ">=3.10"
+dependencies = [
+ "PyGObject>=3.46.0",
+]
+
+[project.scripts]
+json-editor = "editor.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+editor = ["ui/styles/*"]

@@ -34,7 +34,7 @@ DESKTOP_SRC := assets/$(APP_NAME).desktop
 # Python package name (if different from app name)
 PKG_NAME := editor
 
-.PHONY: help install uninstall clean dev test run check-python check-gtk4
+.PHONY: help install uninstall clean test run build check-python check-gtk4
 
 help:
 	@echo "json-editor Makefile"
@@ -44,8 +44,8 @@ help:
 	@echo "Targets:"
 	@echo "  install      - Install json-editor to user or system location"
 	@echo "  uninstall    - Remove json-editor and all installed files"
-	@echo "  dev          - Install in development mode (editable install)"
 	@echo "  test         - Run tests"
+	@echo "  build        - Lint and build the package"
 	@echo "  run          - Run json-editor from source"
 	@echo "  clean        - Remove build artifacts"
 	@echo "  help         - Show this help"
@@ -156,15 +156,18 @@ uninstall: check-python
 
 	@echo "✓ Uninstallation complete"
 
-dev: check-python
-	@echo "Installing in development mode..."
-	$(PYTHON) -m pip install --break-system-packages -e .
-	@echo "✓ Development installation complete"
-	@echo "Changes to source code will be reflected immediately"
-
 test: check-python $(VENV_PYTEST)
 	@echo "Running tests..."
 	@PYTHONPATH=$(SRC_DIR) $(VENV_PYTEST) tests/ -v
+
+build: check-python $(VENV_PYTEST)
+	@echo "Linting..."
+	@$(VENV_PYTHON) -m flake8 src/ tests/ --count --select=E9,F63,F7,F82 --show-source --statistics
+	@$(VENV_PYTHON) -m flake8 src/ tests/ --count --exit-zero --max-complexity=10 --max-line-length=120 --statistics
+	@echo "Building..."
+	@$(VENV_PYTHON) -m pip install --quiet build
+	@$(VENV_PYTHON) -m build
+	@echo "✓ Build complete"
 
 $(VENV_PYTEST):
 	@echo "Creating virtual environment and installing dependencies..."
