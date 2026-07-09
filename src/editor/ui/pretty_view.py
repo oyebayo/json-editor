@@ -30,7 +30,9 @@ class PrettyView(Gtk.ScrolledWindow):
         self._apply_custom_styles()
 
         # Follow system color scheme changes
-        Adw.StyleManager.get_default().connect("notify::color-scheme", self._on_theme_changed)
+        Adw.StyleManager.get_default().connect(
+            "notify::color-scheme", self._on_theme_changed
+        )
 
     def _setup_source_view(self):
         """Configure the GtkSourceView with JSON language support."""
@@ -48,6 +50,10 @@ class PrettyView(Gtk.ScrolledWindow):
         self.source_view.set_tab_width(4)
         self.source_view.set_indent_width(4)
         self.source_view.set_insert_spaces_instead_of_tabs(True)
+
+        # Line spacing
+        self.source_view.set_pixels_above_lines(4)
+        self.source_view.set_pixels_below_lines(4)
 
         # Enable syntax highlighting
         self.source_view.set_highlight_current_line(False)
@@ -95,7 +101,11 @@ class PrettyView(Gtk.ScrolledWindow):
         preferred = self._get_scheme_name(style_manager)
         scheme = style_scheme_manager.get_scheme(preferred)
         if not scheme:
-            fallback = "json-editor-dark" if preferred == "json-editor-light" else "json-editor-light"
+            fallback = (
+                "json-editor-dark"
+                if preferred == "json-editor-light"
+                else "json-editor-light"
+            )
             scheme = style_scheme_manager.get_scheme(fallback)
         if not scheme:
             scheme = style_scheme_manager.get_scheme("classic")
