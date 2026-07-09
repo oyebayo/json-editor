@@ -1,6 +1,6 @@
 # Maintainer: sinistrian <oyebayo@gmail.com>
 pkgname=json-editor
-pkgver=0.0.0
+pkgver=1.1.5
 pkgrel=1
 pkgdesc="A JSON editor"
 arch=('any')
