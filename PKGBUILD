@@ -33,4 +33,11 @@ build() {
 package() {
  cd "$srcdir/$pkgname"
  python -m installer --destdir="$pkgdir" dist/*.whl
+
+ # Install icon
+ install -Dm644 assets/$pkgname.svg "$pkgdir/usr/share/icons/hicolor/scalable/apps/$pkgname.svg"
+
+ # Install desktop file
+ install -Dm644 assets/$pkgname.desktop "$pkgdir/usr/share/applications/$pkgname.desktop"
+ sed -i "s|^Exec=.*|Exec=/usr/bin/$pkgname %F|" "$pkgdir/usr/share/applications/$pkgname.desktop"
 }
