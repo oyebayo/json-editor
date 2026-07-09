@@ -13,16 +13,10 @@ source=("git+https://r.fdcs.lan/sinistrian/json-editor.git")
 sha256sums=("SKIP")
 
 pkgver() {
- cd "$srcdir/$pkgname"
- local _tag _commits
- _tag=$(git describe --tags --abbrev=0)
- _commits=$(git rev-list --count "${_tag}..HEAD")
-
- # Update pkgrel dynamically based on commits since tag
- pkgrel=$(( _commits + 1 ))
-
- # Return the base version (e.g., 1.1.4)
- printf "%s" "${_tag#v}"
+  cd "$srcdir/$pkgname"
+  local _tag
+  _tag=$(git describe --tags --abbrev=0)
+  printf "%s" "${_tag#v}"
 }
 
 build() {

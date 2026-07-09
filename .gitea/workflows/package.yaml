@@ -35,6 +35,14 @@ jobs:
             python-wheel \
             fakeroot \
             debugedit > /dev/null 2>&1
+      
+      - name: Update pkgrel
+        run: |
+          TAG=$(git describe --tags --abbrev=0)
+          COMMITS=$(git rev-list --count "${TAG}..HEAD")
+          PKGREL=$(( COMMITS + 1 ))
+          sed -i "s/^pkgrel=.*/pkgrel=${PKGREL}/" PKGBUILD
+          echo "pkgrel updated to ${PKGREL}"
 
       - name: Publish package
         run: |
