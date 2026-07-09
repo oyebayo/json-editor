@@ -1,6 +1,6 @@
 # Maintainer: sinistrian <oyebayo@gmail.com>
 pkgname=json-editor
-pkgver=0.0.0
+pkgver=1.1.5
 pkgrel=1
 pkgdesc="A JSON editor"
 arch=('any')
@@ -13,16 +13,10 @@ source=("git+https://github.com/oyebayo/json-editor.git")
 sha256sums=("SKIP")
 
 pkgver() {
- cd "$srcdir/$pkgname"
- local _tag _commits
- _tag=$(git describe --tags --abbrev=0)
- _commits=$(git rev-list --count "${_tag}..HEAD")
-
- # Update pkgrel dynamically based on commits since tag
- pkgrel=$(( _commits + 1 ))
-
- # Return the base version (e.g., 1.1.4)
- printf "%s" "${_tag#v}"
+  cd "$srcdir/$pkgname"
+  local _tag
+  _tag=$(git describe --tags --abbrev=0)
+  printf "%s" "${_tag#v}"
 }
 
 build() {
@@ -33,4 +27,11 @@ build() {
 package() {
  cd "$srcdir/$pkgname"
  python -m installer --destdir="$pkgdir" dist/*.whl
+
+ # Install icon
+ install -Dm644 assets/$pkgname.svg "$pkgdir/usr/share/icons/hicolor/scalable/apps/$pkgname.svg"
+
+ # Install desktop file
+ install -Dm644 assets/$pkgname.desktop "$pkgdir/usr/share/applications/$pkgname.desktop"
+ sed -i "s|^Exec=.*|Exec=/usr/bin/$pkgname %F|" "$pkgdir/usr/share/applications/$pkgname.desktop"
 }
