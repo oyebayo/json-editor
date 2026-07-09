@@ -12,6 +12,15 @@ Always use `make test` to run tests.
 
 - **Project layout**: See `docs/layout.md` for directory structure and file organization
 - **Requirements**: See `docs/requirements.md` for UI and behavior specifications
+- **Learnings**: See `docs/learnings.md` for non-obvious discoveries, architecture decisions, and GTK4/Adwaita gotchas
+
+## Before Making Code Changes
+
+Always check `docs/learnings.md` first. It contains hard-won knowledge about GTK4/Adwaita behavior, workarounds, and past decisions. Don't repeat mistakes or reinvent solutions.
+
+## Recording Learnings
+
+When you discover non-obvious behavior, workarounds, or make architecture decisions, document them in `docs/learnings.md`. Do not create auto-skill files — keep all project knowledge in one place.
 
 ## Launching the App for Manual Testing
 
